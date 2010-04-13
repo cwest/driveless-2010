@@ -31,6 +31,30 @@ class UsersController < ApplicationController
   def show
     @user = @current_user
     @trip = Trip.new
+    
+    legend = []
+    colors_legend = []
+    miles = []
+    days = []
+
+    Mode.all.each do |mode|
+      legend << mode.name
+      colors_legend << rand(0xffffff).to_s(16)
+    end
+
+    @user.trips.all.each do |trip|
+      miles << trip.distance
+      days << trip.made_at
+    end
+
+    @image = Gchart.line(
+      :title => "Testing",
+      :legend => legend,
+      :bar_colors => colors_legend,
+      :data => [[1, 5, 3, 6, 9, 7, 10], [3,5, 9, 10]],
+      :axis_with_labels => 'x,y',
+      :axis_labels => [days, miles]
+    )
   end
  
   def edit
